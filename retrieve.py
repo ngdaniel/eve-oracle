@@ -3,8 +3,8 @@ import grequests
 from requests_throttler import BaseThrottler
 import json
 
-locations = {}
-
+with open('data1.json') as data_file:    
+    locations = json.load(data_file)
 
 '''
 regions = json.loads(requests.get('https://public-crest.eveonline.com/regions/').text)
@@ -37,7 +37,7 @@ for x in xrange(21):
     for y in xrange(400):
         if x*400+y < len(keys):
             reqs.append(grequests.get('https://public-crest.eveonline.com/solarsystems/' + keys[x*400+y] + '/', hooks={'response': write}))
-    print len(reqs)
+
     print grequests.map(reqs)
 
 with open('data1.json', 'w') as outfile:
