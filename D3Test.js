@@ -5,7 +5,7 @@ function scatterPlot3d( parent )
     .append("x3d")
       .style( "width", parseInt(parent.style("width"))+"px" )
       .style( "height", parseInt(parent.style("height"))+"px" )
-      .style( "border", "none" )
+      //.style( "border", "none" )
       
   var scene = x3d.append("scene")
 
@@ -16,13 +16,14 @@ function scatterPlot3d( parent )
      .attr( "position", [8, 4, 15])
 
   var rows = initializeDataGrid();
-  var axisRange = [0, 10];
+  var axisRange = [0, 30]; // Changes scaling of the grid size
   var scales = [];
   var initialDuration = 0;
   var time = 0;
   var axisKeys = ["x", "y", "z"]
 
   // Helper functions for initializeAxis() and drawAxis()
+  // Used to create the data for a label
   function axisName( name, axisIndex ) {
     return ['x','y','z'][axisIndex] + name;
   }
@@ -129,7 +130,7 @@ function scatterPlot3d( parent )
     var newTickLabels = tickLabels.enter()
       .append("billboard")
          .attr("axisOfRotation", "0 0 0")     
-      .append("shape")
+      .append("shape") 
       .call(makeSolid)
     newTickLabels.append("text")
       .attr("string", scale.tickFormat(10))
@@ -193,7 +194,7 @@ function scatterPlot3d( parent )
       .append("transform")
         .attr("class", "datapoint")
         .attr("scale", [sphereRadius, sphereRadius, sphereRadius])
-      .append("shape");
+      .append("shape")
     newDatapoints
       .append("appearance")
       .append("material");
@@ -209,15 +210,34 @@ function scatterPlot3d( parent )
 
     datapoints.transition()
         .attr("translation", function(row) { 
+
+        	//I'm sorry I suck LOL, appending a name tag to each sphere
+	        var sysNameLabel = scene.append("transform")
+	    	.attr("class", axisName("sysName", 0))
+	    	.attr("translation", x(row[axisKeys[0]]) + " " + y(row[axisKeys[1]]) + " " + z(row[axisKeys[2]]))
+	    	.append("billboard")
+		    .attr("axisOfRotation", "0 0 0") // face viewer
+		    .append("shape")
+		    .call(makeSolid)
+		    .append("text")
+	        .attr("class", axisName("AxisLabelText", 0))
+	        .attr("solid", "true")
+	        .attr("string", "    System Name")
+	   	    .append("fontstyle")
+	        .attr("size", 0.2)
+	        .attr("family", "SANS")
+	        .attr("justify", "END MIDDLE" )
+
           return x(row[axisKeys[0]]) + " " + y(row[axisKeys[1]]) + " " + z(row[axisKeys[2]])})
+        
   }
 
   // CREATES XYZ DATA ARRAY
   function initializeDataGrid() {
     var rows = [];
     // Follow the convention where y(x,z) is elevation.
-    for (var x=-5; x<=5; x+=1) {
-      for (var z=-5; z<=5; z+=1) {
+    for (var x=-10; x<=10; x+=1) {
+      for (var z=-10; z<=10; z+=1) {
         rows.push({x: x, y: 0, z: z});
      }
     }
