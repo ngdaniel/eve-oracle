@@ -104,7 +104,7 @@ function scatterPlot3d( parent )
     
     scales[axisIndex] = scale;
 
-    var numTicks = 8;
+    var numTicks = 16;
     var tickSize = 0.1;
     var tickFontSize = 0.5;
 
@@ -212,6 +212,7 @@ function scatterPlot3d( parent )
           return x(row[axisKeys[0]]) + " " + y(row[axisKeys[1]]) + " " + z(row[axisKeys[2]])})
   }
 
+  // CREATES XYZ DATA ARRAY
   function initializeDataGrid() {
     var rows = [];
     // Follow the convention where y(x,z) is elevation.
@@ -223,13 +224,13 @@ function scatterPlot3d( parent )
     return rows;
   }
 
+  // CHANGES XYZ DATA ARRAY AND PLOTS IT (originally for fluctuating point heights)
   function updateData() {
-    time += Math.PI/8;
 
       for (var r=0; r<rows.length; ++r) {
         var x = rows[r].x;
         var z = rows[r].z;
-        rows[r].y = 5*( Math.sin(0.5*x + time) * Math.cos(0.25*z + time));
+        rows[r].y = x + z;
       }
       plotData();
 
